@@ -1,20 +1,37 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./Components/LoginComponent";
-import Signup from "./Components/SignupComponent";
-import { isAuthenticated, isMaintenanceMode } from "./Auth/UserAuth"; // Import the isAuthenticated function
+import { checkAdminStatus, isAuthenticated, isMaintenanceMode, useCheckAdminStatus } from "./Auth/UserAuth"; // Import the isAuthenticated function
 import MaintenancePage from "./Components/Error/MaintenancePage";
-import Test from "./Components/TestComponent";
 import Dashboard from "./Components/DashboardComponent";
 import User from "./Components/UserComponent";
 import Project from "./Components/ProjectComponent";
+import File from "./Components/FileComponent";
+import ViewFile from "./Components/ViewFileComponent";
+import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
+import Test from "./Components/TestComponent";
+import Favfile from "./Components/FavFileComponent";
+import CategoryComponent from "./Components/CategoryComponent";
+import SubCategoryComponent from "./Components/SubCategoryComponent";
+import AssignedFile from "./Components/AssignFileComponent";
+
+const PrivateAdminRoute = ({ element, ...rest }) => {
+  const isAdmin = useCheckAdminStatus()
+  console.log("isAdmin", isAdmin);
+  return isAdmin ? (
+    element
+  ) : (
+    <Navigate to="/dashboard" replace={true} />
+  );
+};
 
 
 const PrivateRoute = ({ element, ...rest }) => {
   return isAuthenticated() ? (
     element
   ) : (
-    <Navigate to="/login" replace={true} />
+    <Navigate to="/" replace={true} />
   );
 };
 
@@ -26,7 +43,6 @@ const PrivateLoginRoute = ({ element, ...rest }) => {
   );
 };
 
-
 const App = () => {
   if (isMaintenanceMode()) {
     return <MaintenancePage />;
@@ -35,8 +51,9 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<PrivateLoginRoute element={<Login />} />} />
-        <Route path="/" element={<Signup />} />
+        <Route path="/" element={<PrivateLoginRoute element={<Login />} />} />
+        <Route path="/forgot" element={<PrivateLoginRoute element={<ForgotPassword />} />} />
+        <Route path="/resetpassword" element={<ResetPassword />} />
 
         <Route
           path="/dashboard"
@@ -44,17 +61,41 @@ const App = () => {
         />
         <Route
           path="/user"
-          element={<PrivateRoute element={<User />} />}
+          element={<PrivateAdminRoute element={<User />} />}
         />
         <Route
           path="/project"
-          element={<PrivateRoute element={<Project />} />}
+          element={<PrivateAdminRoute element={<Project />} />}
+        />
+        <Route
+          path="/file"
+          element={<PrivateRoute element={<File />} />}
+        />
+        <Route
+          path="/favfile"
+          element={<PrivateRoute element={<Favfile />} />}
+        />
+        <Route
+          path="/viewfile"
+          element={<PrivateRoute element={<ViewFile />} />}
         />
 
         <Route
-          path="/test"
-          element={<PrivateRoute element={<Test />} />}
+          path="/category"
+          element={<PrivateAdminRoute element={<CategoryComponent />} />}
         />
+
+        <Route
+          path="/subcategory"
+          element={<PrivateAdminRoute element={<SubCategoryComponent />} />}
+        />
+
+        <Route
+          path="/assignedfile"
+          element={<PrivateRoute element={<AssignedFile />} />}
+        />
+
+        <Route path="/test" element={<PrivateRoute element={<Test />} />} />
 
       </Routes>
     </BrowserRouter>

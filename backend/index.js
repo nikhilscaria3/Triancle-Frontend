@@ -71,10 +71,10 @@ app.use('/', CategoryRouter);
 
 
 // Route handler for '/'
-app.get('/', (req, res) => {
-  console.log("Request received for '/'");
-  res.send("hei");
-});
+// app.get('/', (req, res) => {
+//   console.log("Request received for '/'");
+//   res.send("hei");
+// });
 
 // setupSocket(server);
 
@@ -82,6 +82,16 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log("Server Listening on port " + PORT);
 });
+
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../frontend/build/index.html'))
+  })
+}
+
+
 
 // Test database connection
 testConnection();

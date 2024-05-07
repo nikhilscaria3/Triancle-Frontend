@@ -1,21 +1,26 @@
+// axiosInstance.js
 import axios from "axios";
+import config from "./config";
 
-const baseURL = "http://localhost:5000/api/v1/";
+const BackendURL = config.BackendURL
 
 const axiosInstance = axios.create({
-  baseURL: baseURL,
+  baseURL: BackendURL,
 });
 
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('refreshtoken');
+    console.log('Access token:', token); // Check if token is retrieved
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('Authorization header set:', config.headers.Authorization); // Check if header is set
     }
     return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error); // Log any interceptor errors
     return Promise.reject(error);
   }
 );
@@ -31,15 +36,18 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // Send a request to the new token refresh endpoint
-        const response = await axiosInstance.post('/api/refreshtoken', {
-          expiredToken: localStorage.getItem('token'),
-          email: localStorage.getItem("userEmail")
+        // Send a request to the token refresh endpoint
+        const response = await axiosInstance.post('/refresh/refreshtoken', {
+          refreshToken: localStorage.getItem('refreshtoken'),
+          accessToken: localStorage.getItem("accesstoken")
         });
 
-        localStorage.setItem('token', response.data.token);
+        // Update the stored tokens with the new ones
+        localStorage.setItem('accesstoken', response.data.accesstoken);
+        localStorage.setItem('refreshtoken', response.data.refreshtoken);
 
-        // Retry the original request with the new token
+        // Retry the original request with the new access token
+        originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         console.error('Token refresh failed', refreshError);
@@ -51,5 +59,6 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 export { axiosInstance };

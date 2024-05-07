@@ -13,8 +13,8 @@ File: style.css
   --bs-body-bg-rgb: 255, 255, 255;
   --pc-heading-color: #1d2630;
   --pc-active-background: #f3f5f7;
-  --pc-sidebar-background: #3f4d67;
-  --pc-sidebar-color: #a9b7d0;
+  --pc-sidebar-background: #000000;
+  --pc-sidebar-color: #ffffff;
   --pc-sidebar-color-rgb: 169, 183, 208;
   --pc-sidebar-active-color: #0d6efd;
   --pc-sidebar-active-background: rgba(0, 0, 0, 0.1);
@@ -261,7 +261,7 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
   margin-bottom: 0.5rem;
   font-weight: 400;
   line-height: 1.2;
-  color: var(--bs-heading-color);
+  color: var(--pc-sidebar-color);
 }
 
 h1, .h1 {
@@ -17224,14 +17224,13 @@ pre[class*=language-] > code {
 
 .pc-container {
   position: relative;
-  top: 74px;
+  top: 34px;
   margin-left: 264px;
   min-height: calc(100vh - 135px);
 }
 .pc-container .pc-content {
   padding-left: 40px;
   padding-right: 40px;
-  padding-top: 20px;
 }
 @media (max-width: 1199.98px) {
   .pc-container .pc-content.container {
@@ -22099,12 +22098,12 @@ select.form-control[data-multiselectsplitter-firstselect-selector], select.form-
 .auth-main .auth-wrapper.v1 .auth-bg .r:first-child {
   top: -100px;
   right: -100px;
-  background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
+  background: linear-gradient(-135deg, #1de9b6 0%, #01BEF9 100%);
 }
 .auth-main .auth-wrapper.v1 .auth-bg .r:last-child {
   left: -100px;
   bottom: -100px;
-  background: linear-gradient(-135deg, #899FD4 0%, #A389D4 100%);
+  background: linear-gradient(-135deg, #4ECA4B 0%, #17b313 100%);
 }
 .auth-main .auth-wrapper.v1 .auth-bg .r.s {
   width: 20px;
@@ -22113,12 +22112,12 @@ select.form-control[data-multiselectsplitter-firstselect-selector], select.form-
 .auth-main .auth-wrapper.v1 .auth-bg .r.s:nth-child(2) {
   top: 150px;
   right: -150px;
-  background: #04a9f5;
+  background: #FFB500;
 }
 .auth-main .auth-wrapper.v1 .auth-bg .r.s:nth-child(3) {
   left: -150px;
   bottom: 150px;
-  background: #1de9b6;
+  background: #000;
 }
 .auth-main .auth-wrapper.v1 .auth-bg .r:nth-child(odd) {
   animation: floating 7s infinite;
