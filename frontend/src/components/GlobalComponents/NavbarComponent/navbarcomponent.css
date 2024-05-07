@@ -1,0 +1,34 @@
+body {
+    margin: 0px;
+}
+
+.accountnamecontainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.navhirestyle {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.navinstyle {
+    color: #007bff;
+    margin-left: 0.5rem;
+}
+
+.accounttype {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+
+.dropdown-item,
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
