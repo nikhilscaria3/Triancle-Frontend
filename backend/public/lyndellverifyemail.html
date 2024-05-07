@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyndell Verify Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .brand {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .otp {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #007bff;
+            text-decoration: none;
+            cursor: pointer;
+            /* Change cursor to pointer to indicate clickability */
+        }
+
+        .note {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome to <span class="brand">Lyndell</span></h1>
+        <p>Please click the following link to verify your email:</p>
+        <!-- Use a form to perform a POST request -->
+        <a href="{{url}}{{link}}">Verify</a>
+        <p class="note">This link is valid for a 1 hr and should not be shared with anyone.</p>
+    </div>
+</body>
+
+</html>

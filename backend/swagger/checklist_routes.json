@@ -1,0 +1,118 @@
+{
+    "/api/v1/checklist/getchecklist": {
+        "get": {
+            "summary": "Get checklist by various filters",
+            "description": "Retrieve a list of checklists filtered by various criteria",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "prepaidDate",
+                    "in": "query",
+                    "description": "Prepaid date of the checklist to filter",
+                    "required": false,
+                    "type": "string",
+                    "format": "date"
+                },
+                {
+                    "name": "submittedDate",
+                    "in": "query",
+                    "description": "Submitted date of the checklist to filter",
+                    "required": false,
+                    "type": "string",
+                    "format": "date"
+                },
+                {
+                    "name": "status",
+                    "in": "query",
+                    "description": "Status of the checklist to filter",
+                    "required": false,
+                    "type": "string"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Checklist ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Checklist name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Checklist description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/checklist/exportchecklist": {
+        "get": {
+            "summary": "Get checklist export as pdf and excel",
+            "description": "export checklist as pdf or excel",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "type",
+                    "in": "query",
+                    "description": "type of export",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "name": "filepath",
+                    "in": "query",
+                    "description": "filename of pdf",
+                    "required": false,
+                    "type": "string"
+                    
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    }
+}

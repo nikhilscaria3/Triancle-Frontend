@@ -1,0 +1,239 @@
+{
+    "/api/v1/calendartask/getcalendartask": {
+        "get": {
+            "summary": "Get calendar task by date ans site name",
+            "description": "Retrieve a list of calendar task filtered by various criteria",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "date",
+                    "in": "query",
+                    "description": "date of the calendar to filter",
+                    "required": false,
+                    "type": "string",
+                    "format": "date"
+                },
+                {
+                    "name": "site",
+                    "in": "query",
+                    "description": "Name of site to filter",
+                    "required": false,
+                    "type": "string"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Checklist ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Checklist name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Checklist description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/calendartask/createcalendartask": {
+        "post": {
+            "summary": "Create calendar task ",
+            "description": "create client task",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "Create calendar task by site,name,date",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "site": {
+                                "type": "string",
+                                "description": "Site name"
+                            },
+                            "date": {
+                                "type": "string",
+                                "description": "Date of the task",
+                                "format": "date"
+                            },
+                            "task": {
+                                "type": "string",
+                                "description": "Task Description"
+                            },
+                            "priority": {
+                                "type": "string",
+                                "description": "Task Priority"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/calendartask/deletecalendartask": {
+        "post": {
+            "summary": "Delete calendar task ",
+            "description": "Delete client task",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "query",
+                    "description": "ID to retreive and delete the calendar task"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/calendartask/updatecalendartask": {
+        "post": {
+            "summary": "Update calendar task ",
+            "description": "Update client task",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "query",
+                    "description": "ID to retreive and delete the calendar task"
+                },
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "Update calendar task by site,name,date",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "site": {
+                                "type": "string",
+                                "description": "Site name"
+                            },
+                            "date": {
+                                "type": "string",
+                                "description": "Date of the task",
+                                "format": "date"
+                            },
+                            "task": {
+                                "type": "string",
+                                "description": "Task Description"
+                            },
+                            "priority": {
+                                "type": "string",
+                                "description": "Task Priority"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    }
+}

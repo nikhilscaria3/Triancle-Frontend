@@ -1,0 +1,380 @@
+{
+    "/api/v1/project/getproject": {
+        "get": {
+            "summary": "Get projects by name, ID, or date",
+            "description": "Retrieve a list of projects filtered by name, ID, or date",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "projectName",
+                    "in": "query",
+                    "description": "Name of the project to filter",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "name": "projectId",
+                    "in": "query",
+                    "description": "ID of the project to filter",
+                    "required": false,
+                    "type": "integer"
+                },
+                {
+                    "name": "date",
+                    "in": "query",
+                    "description": "Date of the project to filter",
+                    "required": false,
+                    "type": "string",
+                    "format": "date"
+                },
+                {
+                    "name": "alphabetical",
+                    "in": "query",
+                    "description": "Sort projects alphabetically by name",
+                    "required": false,
+                    "type": "boolean"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/project/createproject": {
+        "post": {
+            "summary": "Create projects by name, ID, or date and other",
+            "description": "Create Projects by name, ID, or date and other",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "query",
+                    "description": "ID of the project to Create",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "Project details for Create",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Project name"
+                            },
+                            "projectId": {
+                                "type": "integer",
+                                "description": "ID of the project"
+                            },
+                            "location": {
+                                "type": "string",
+                                "description": "Location of the project"
+                            },
+                            "startDate": {
+                                "type": "string",
+                                "description": "Start date of the project",
+                                "format": "date"
+                            },
+                            "endDate": {
+                                "type": "string",
+                                "description": "End date of the project",
+                                "format": "date"
+                            },
+                            "percentageCompleted": {
+                                "type": "integer",
+                                "description": "Percentage completed of the project"
+                            },
+                            "projectHead": {
+                                "type": "string",
+                                "description": "Project head"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/project/updateproject": {
+        "put": {
+            "summary": "Update projects by name, ID, or date and other",
+            "description": "Update Projects by name, ID, or date and other",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "query",
+                    "description": "ID of the project to update",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "Project details for update",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Project name"
+                            },
+                            "projectId": {
+                                "type": "integer",
+                                "description": "ID of the project"
+                            },
+                            "location": {
+                                "type": "string",
+                                "description": "Location of the project"
+                            },
+                            "startDate": {
+                                "type": "string",
+                                "description": "Start date of the project",
+                                "format": "date"
+                            },
+                            "endDate": {
+                                "type": "string",
+                                "description": "End date of the project",
+                                "format": "date"
+                            },
+                            "percentageCompleted": {
+                                "type": "integer",
+                                "description": "Percentage completed of the project"
+                            },
+                            "projectHead": {
+                                "type": "string",
+                                "description": "Project head"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/project/deleteproject": {
+        "delete": {
+            "summary": "delete projects by ID,",
+            "description": "delete projects by ID",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "query",
+                    "description": "ID of the project to delete",
+                    "required": false,
+                    "type": "integer"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/project/countofprojects": {
+        "get": {
+            "summary": "Get projects counts",
+            "description": "Retrieve a count of projects",
+            "produces": [
+                "application/json"
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/project/exportproject": {
+        "get": {
+            "summary": "Get projects export as pdf and excel",
+            "description": "exopr projects as pdf or excel",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "type",
+                    "in": "query",
+                    "description": "type of export",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "name": "filepath",
+                    "in": "query",
+                    "description": "filename of pdf",
+                    "required": false,
+                    "type": "string"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    }
+}

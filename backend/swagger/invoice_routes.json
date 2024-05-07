@@ -1,0 +1,191 @@
+{
+    "/api/v1/invoices/getinvoices": {
+        "get": {
+            "summary": "Get checklist by various filters",
+            "description": "Retrieve a list of checklists filtered by various criteria",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "query",
+                    "description": "Prepaid date of the checklist to filter",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "name": "hsnSac",
+                    "in": "query",
+                    "description": "Submitted date of the checklist to filter",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "name": "date",
+                    "in": "query",
+                    "description": "Status of the checklist to filter",
+                    "required": false,
+                    "type": "string",
+                    "format": "date"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Checklist ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Checklist name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Checklist description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/invoices/createinvoice": {
+        "post": {
+            "summary": "Create invoice and send through mail",
+            "description": "Export invoice as PDF or Excel",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "Data for creating the invoice",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "invoiceNumber": {
+                                "type": "string",
+                                "description": "Invoice number"
+                            },
+                            "date": {
+                                "type": "string",
+                                "description": "Date of the invoice",
+                                "format": "date"
+                            },
+                            "transactionNumber": {
+                                "type": "string",
+                                "description": "Transaction number"
+                            },
+                            "nameAndAddress": {
+                                "type": "string",
+                                "description": "Name and address"
+                            },
+                            "gstinUin": {
+                                "type": "string",
+                                "description": "GSTIN/UIN"
+                            },
+                            "stateName": {
+                                "type": "string",
+                                "description": "State name"
+                            },
+                            "stateCode": {
+                                "type": "string",
+                                "description": "State code"
+                            },
+                            "items": {
+                                "type": "array",
+                                "description": "Array of invoice items",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "slNo": {
+                                            "type": "integer",
+                                            "description": "Serial number"
+                                        },
+                                        "descriptionOfGoods": {
+                                            "type": "string",
+                                            "description": "Description of goods"
+                                        },
+                                        "hsnSac": {
+                                            "type": "string",
+                                            "description": "HSN/SAC"
+                                        },
+                                        "quantity": {
+                                            "type": "integer",
+                                            "description": "Quantity"
+                                        },
+                                        "rate": {
+                                            "type": "number",
+                                            "description": "Rate"
+                                        },
+                                        "per": {
+                                            "type": "string",
+                                            "description": "Per"
+                                        },
+                                        "totalAmount": {
+                                            "type": "number",
+                                            "description": "Total amount"
+                                        },
+                                        "cgst": {
+                                            "type": "number",
+                                            "description": "CGST"
+                                        },
+                                        "sgst": {
+                                            "type": "number",
+                                            "description": "SGST"
+                                        }
+                                    }
+                                }
+                            },
+                            "totalInWords": {
+                                "type": "string",
+                                "description": "Total amount in words"
+                            },
+                            "total": {
+                                "type": "number",
+                                "description": "Total amount"
+                            },
+                            "email": {
+                                "type": "string",
+                                "description": "Recipient's email address"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "Invoice ID"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Bad request - Validation errors"
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    }
+}

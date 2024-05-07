@@ -1,0 +1,625 @@
+{
+    "/api/v1/admin/login": {
+        "post": {
+            "summary": "User Login",
+            "description": "Authenticate a user and generate a JWT token",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "User credentials for authentication",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "User's email address"
+                            },
+                            "password": {
+                                "type": "string",
+                                "description": "User's password"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful login",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "token": {
+                                "type": "string",
+                                "description": "JWT token for authentication"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Unauthorized - Invalid credentials"
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/admin/signup": {
+        "post": {
+            "summary": "User Signup",
+            "description": "Register a user and generate a link to verify",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "User credentials for Registration",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "User's email address"
+                            },
+                            "password": {
+                                "type": "string",
+                                "description": "User's password"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful Sended the verification link",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "token": {
+                                "type": "string",
+                                "description": "JWT token for verification"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Unauthorized - Invalid credentials"
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/admin/verifyforgotmail": {
+        "post": {
+            "summary": "Verify Forgot Email",
+            "description": "Click link to verify the mail",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "Generate link to verify",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "User's email address"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful Sended the verification link",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "token": {
+                                "type": "string",
+                                "description": "JWT token for verification"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Unauthorized - Invalid credentials"
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/user/uploaduserimage": {
+        "post": {
+            "summary": "Upload user Image",
+            "description": "Upload image in backend and s3",
+            "consumes": [
+                "multipart/form-data"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "file",
+                    "in": "formData",
+                    "description": "The image file to upload",
+                    "required": true,
+                    "type": "file"
+                },
+                {
+                    "name": "email",
+                    "in": "query",
+                    "description": "User's email address",
+                    "required": true,
+                    "type": "string",
+                    "format": "email"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "File uploaded successfully",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "description": "Success message"
+                            },
+                            "file": {
+                                "type": "object",
+                                "properties": {
+                                    "originalname": {
+                                        "type": "string",
+                                        "description": "Original name of the uploaded file"
+                                    },
+                                    "filename": {
+                                        "type": "string",
+                                        "description": "Name of the uploaded file on the server"
+                                    },
+                                    "size": {
+                                        "type": "integer",
+                                        "description": "Size of the uploaded file in bytes"
+                                    },
+                                    "path": {
+                                        "type": "string",
+                                        "description": "Path to the uploaded file"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Bad request - No file uploaded or missing parameters"
+                },
+                "404": {
+                    "description": "Not found - User not found"
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/admin/forgotpassword": {
+        "post": {
+            "summary": "Forgot user Password",
+            "description": "Change Account Password",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "token",
+                    "in": "query",
+                    "description": "Token to verify the email",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "Password credentials for forgot password",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "newPassword": {
+                                "type": "string",
+                                "description": "User's new password"
+                            },
+                            "confirmPassword": {
+                                "type": "string",
+                                "description": "User's confirm password"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful Sended the verification link",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "token": {
+                                "type": "string",
+                                "description": "JWT token for verification"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Unauthorized - Invalid credentials"
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/user/getuser": {
+        "get": {
+            "summary": "Get users by name, ID number, or job role",
+            "description": "Retrieve a list of users filtered by name, ID number, or job role",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "query",
+                    "description": "Name of the user to filter",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "name": "idNumber",
+                    "in": "query",
+                    "description": "ID number of the user to filter",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "name": "jobRole",
+                    "in": "query",
+                    "description": "Job role of the user to filter",
+                    "required": false,
+                    "type": "string"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "User ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "User name"
+                                },
+                                "jobRole": {
+                                    "type": "string",
+                                    "description": "User's job role"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/user/createuser": {
+        "post": {
+            "summary": "Create a new user",
+            "description": "Create a new user with the provided details",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "User details for creation",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "User's name"
+                            },
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "User's email address"
+                            },
+                            "jobRole": {
+                                "type": "string",
+                                "description": "User's job role"
+                            },
+                            "accessLevel": {
+                                "type": "string",
+                                "description": "User's access level"
+                            },
+                            "phoneNo": {
+                                "type": "string",
+                                "description": "User's phone number"
+                            },
+                            "status": {
+                                "type": "boolean",
+                                "description": "User's status"
+                            },
+                            "idNumber": {
+                                "type": "string",
+                                "description": "User's ID number"
+                            },
+                            "bloodGroup": {
+                                "type": "string",
+                                "description": "User's blood group"
+                            }
+                        }
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "User ID"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "User name"
+                            },
+                            "jobRole": {
+                                "type": "string",
+                                "description": "User's job role"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/user/updateuser": {
+        "put": {
+            "summary": "Update a user",
+            "description": "Update the user with the provided details",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "User details for creation",
+                    "required": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "User's name"
+                            },
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "User's email address"
+                            },
+                            "jobRole": {
+                                "type": "string",
+                                "description": "User's job role"
+                            },
+                            "accessLevel": {
+                                "type": "string",
+                                "description": "User's access level"
+                            },
+                            "phoneNo": {
+                                "type": "string",
+                                "description": "User's phone number"
+                            },
+                            "status": {
+                                "type": "boolean",
+                                "description": "User's status"
+                            },
+                            "idNumber": {
+                                "type": "string",
+                                "description": "User's ID number"
+                            },
+                            "bloodGroup": {
+                                "type": "string",
+                                "description": "User's blood group"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Id",
+                    "in": "query",
+                    "description": "ID of the project to update",
+                    "required": false,
+                    "type": "integer"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "User ID"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "User name"
+                            },
+                            "jobRole": {
+                                "type": "string",
+                                "description": "User's job role"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/user/deleteuser": {
+        "delete": {
+            "summary": "Delete a user",
+            "description": "Create a new user with the provided details",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "idNumber",
+                    "in": "query",
+                    "description": "ID of the project to update",
+                    "required": false,
+                    "type": "integer"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "User ID"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "User name"
+                            },
+                            "jobRole": {
+                                "type": "string",
+                                "description": "User's job role"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    },
+    "/api/v1/user/exportuserdata": {
+        "get": {
+            "summary": "Get user export as pdf and excel",
+            "description": "export user as pdf or excel",
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "type",
+                    "in": "query",
+                    "description": "type of export",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "name": "filepath",
+                    "in": "query",
+                    "description": "filename of pdf",
+                    "required": false,
+                    "type": "string"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful operation",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "description": "Project ID"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Project name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Project description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error"
+                }
+            }
+        }
+    }
+}
