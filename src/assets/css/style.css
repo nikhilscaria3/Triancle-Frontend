@@ -1,0 +1,108 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  vertical-align: baseline;
+  background: transparent;
+  text-decoration: none;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.zmdi {}
+
+html {
+  scroll-behavior: smooth;
+}
+
+textarea {
+  resize: none;
+}
+
+input:-internal-autofill-selected {
+  color: unset !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: white 0px 0px 0px 1000px inset;
+}
+
+::-webkit-input-placeholder {
+  font-size: 20px;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+@font-face {
+  font-family: "poppins";
+  src: url("../fonts/poppins-regular-webfont.woff");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "bona";
+  src: url("../fonts/BonaNova-Bold.ttf");
+  font-weight: normal;
+}
+
+body {
+  overflow-x: hidden;
+  color: #000;
+}
+
+
+body.active {
+  overflow: hidden;
+}
+
+.wrapper {
+  width: 90%;
+  margin: 0px auto;
+  max-width: 1350px;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+h1 {}
+
+h2 {}
+
+p {}
+
+img {
+  user-select: none;
+  /* supported by Chrome and Opera */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.hidden {
+  background-color: aqua;
+  display: none;
+}
