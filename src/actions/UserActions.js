@@ -21,17 +21,17 @@ import { showNotification } from '../utils/toastmessage';
 // actions/UserActions.js
 
 // Fetch users action creators
-export const fetchUsers = (searchTerm, sortBy, sortOrder) => {
+export const fetchUsers = (page, limit, searchTerm, sortBy, sortOrder) => {
   return async (dispatch) => {
     dispatch({ type: FETCH_USERS_REQUEST });
     try {
-      const response = await axiosInstance.get('/user/getuser', {
+      const response = await axiosInstance.get(`/user/getuser?page=${page}&limit=${limit}`, {
         params: {
           searchTerm, sortBy, sortOrder
         }
       }
       );
-      const users = await response.data.data;
+      const users = await response.data;
       console.log(users);
       dispatch({ type: FETCH_USERS_SUCCESS, payload: users, message: response.data.message });
       return projects;

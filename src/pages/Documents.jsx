@@ -19,24 +19,26 @@ import note_alt from "../assets/icons/note_alt.png";
 import calendar from "../assets/icons/calendar_clock1.png";
 import fact from "../assets/icons/fact_check.png";
 import Pagination from "../components/includes/Pagination";
-import { createDocument, getDocument } from "../actions/DocumentActions";
+import { createDocument, deleteDocument, getDocument, updateDocument } from "../actions/DocumentActions";
 import { fetchUsers } from "../actions/UserActions";
 import { ToastContainer } from "react-toastify";
 import socket from "../utils/socket";
 
 
 // const Documents = ({ projects, getProject }) => {
-const Documents = ({ projects, document, users, fetchUsers, getDocument, createDocument, getProject }) => {
+const Documents = ({ projects, document, users, fetchUsers, getDocument, createDocument, deleteDocument, updateDocument, getProject }) => {
   const [OpencreateProject, setOpenCreateProject] = useState(false);
   const [selectedBox, setSelectedBox] = useState(null);
   const [showMore, setShowMore] = useState(false);
   const [isEdit, setisEdit] = useState(false);
+
   const navigate = useNavigate()
+
   const [formData, setFormData] = useState({
     id: "",
     title: "",
-    project: "",
-    documentType: "",
+    projectId: "",
+    DocumentTypeId: "",
     description: "",
     selectedUsers: null,
     sendNotification: false,
@@ -91,21 +93,27 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
       color: `${themes.report}`,
     },
   ];
-
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [documentID, setDocumentID] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [documentTypes, setDocumentTypes] = useState([]);
   const [documentdata, setDocumentData] = useState([]);
   const [selectedDocumentType, setSelectedDocumentType] = useState(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [totalPages, setTotalPages] = useState(document.totalPages);
+
 
   useEffect(() => {
     // Fetch projects when component mounts
-    getDocument(selectedSite, selectedDocumentType);
+    getDocument(page, limit, selectedSite, selectedDocumentType);
     getProject();
     fetchUsers();
     fetchDocumentTypes();
-  }, [getProject, selectedDocumentType, selectedSite, getDocument]);
+  }, [page, getProject, selectedDocumentType, selectedSite, getDocument]);
 
 
+  console.log(document);
   const handleCreateDocument = async (e) => {
     e.preventDefault();
     await createDocument(formData);
@@ -123,6 +131,7 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
 
 
   const toggleModal = () => {
+    setisEdit(false)
     setOpenCreateProject(true);
   };
 
@@ -211,6 +220,37 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
     navigate('/documentview', { state: { data: data } });
   };
 
+
+  const handleEditDocument = (item) => {
+    console.log(item);
+    setisEdit(true)
+    setOpenCreateProject(true)
+    setFormData(item)
+  }
+
+  const handleUpdateDocument = async (e) => {
+    e.preventDefault();
+    await updateDocument(formData);
+    await getDocument();
+    setOpenCreateProject(false);
+  };
+
+  const handleDeleteClick = (documentID) => {
+    setDocumentID(documentID);
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDeleteDocument = async (documentID) => {
+    await deleteDocument(documentID); // Pass the storedID directly to your action
+    setShowDeleteModal(false);
+    getDocument(); // Refresh project data
+  };
+
+
   return (
 
     <>
@@ -225,6 +265,7 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
                   className={selectedBox === index ? "highlightedBox" : ""}
                   key={index}
                   onClick={() => handleSelectDocumentType(box.desc, index)}
+
                 >
                   <BoxLeft style={{ backgroundColor: `${box.color}` }}>
                     <Icon src={box.icon} />
@@ -275,8 +316,8 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
               {document.documentdata &&
                 document.documentdata.map((data, index) => {
                   return (
-                    <Tr>
-                      <Td>{index + 1}</Td>
+                    <Tr key={data.id}>
+                      <Td>{(page - 1) * 5 + index + 1}</Td>
                       <Td>{data.title}</Td>
                       <Td>{data.project.name}</Td>
                       <Td>{data.DocumentType.name}</Td>
@@ -309,6 +350,7 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
                                 color: `${themes.info_text}`,
                                 padding: "8px 10px",
                               }}
+                              onClick={() => handleEditDocument(data)}
                             >
                               Edit
                             </option>
@@ -317,6 +359,8 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
                                 color: `${themes.error_text}`,
                                 padding: "8px 10px",
                               }}
+                              onClick={() => handleDeleteClick(data.id)}
+
                             >
                               Delete
                             </option>
@@ -328,13 +372,31 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
                 })}
             </Tbody>
           </Table>
-          <Pagination />
+          <Pagination initialPage={page} totalPages={document.totalPages} getData={setPage} />
         </MainContainer>
+        {showDeleteModal && (
+          <DeleteModal>
+            <ModalContent>
+              <ModalTitle>Confirm Delete</ModalTitle>
+              <p>Are you sure you want to delete this project?</p>
+              <ButtonGroup>
+                <DeleteButton onClick={() => handleDeleteDocument(documentID)}>
+                  Delete
+                </DeleteButton>
+                <CancelButton onClick={handleCloseModal}>Cancel</CancelButton>
+              </ButtonGroup>
+            </ModalContent>
+          </DeleteModal>
+        )}
         {OpencreateProject && (
           <ModalOverlay>
             <ModalContainer>
               <ModalHead>
-                <Heading>Create Document</Heading>
+                {isEdit ?
+                  <Heading>Update Document</Heading>
+                  :
+                  <Heading>Create Document</Heading>
+                }
                 <span onClick={() => setOpenCreateProject(false)}>
                   <i
                     class="bx bx-x"
@@ -362,9 +424,9 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
 
 
                 <Select
-                  id="documentType"
-                  name="documentType"
-                  value={formData.documentType}
+                  id="documentTypeId"
+                  name="DocumentTypeId"
+                  value={formData.DocumentTypeId}
                   onChange={handleChange}>
                   <option value="">Select DocumentType</option>
                   {documentTypes && documentTypes.length > 0 ? (
@@ -379,9 +441,9 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
                 </Select>
 
                 <Select
-                  id="project"
-                  name="project"
-                  value={formData.project}
+                  id="projectId"
+                  name="projectId"
+                  value={formData.projectId}
                   onChange={handleChange}>
                   <option value="">Select Site</option>
                   {projects.projects && projects.projects.length > 0 ? (
@@ -401,8 +463,8 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
                   value={formData.selectedUsers}
                   onChange={handleChange}>
                   <option value="">Select Users</option>
-                  {users && users.length > 0 ? (
-                    users.map((site) => (
+                  {users.data && users.data.length > 0 ? (
+                    users.data.map((site) => (
                       <option key={site.id} value={site.id}>
                         {site.name}
                       </option>
@@ -421,7 +483,6 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
                   />
                   Send Notification to User
                 </Label>
-
 
                 <NotificationOptions>
                   {selectedOptions.map((option) => (
@@ -452,7 +513,7 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
 
                 {isEdit ?
                   <FormButtons>
-                    <Button type="submit">Update Document</Button>
+                    <Button type="submit" onClick={handleUpdateDocument}>Update Document</Button>
                   </FormButtons>
                   :
                   <FormButtons>
@@ -466,9 +527,10 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
         )}
       </Container>
     </>
-
   );
 };
+
+
 
 const mapStateToProps = (state) => ({
   message: state.document.message,
@@ -479,7 +541,7 @@ const mapStateToProps = (state) => ({
   error: state.document.error,
 });
 
-export default connect(mapStateToProps, { getDocument, fetchUsers, createDocument, getProject })(Documents);
+export default connect(mapStateToProps, { getDocument, fetchUsers, createDocument, updateDocument, deleteDocument, getProject })(Documents);
 
 
 
@@ -593,7 +655,6 @@ const Input = styled.input`
 `;
 const TextArea = styled.textarea`
   width: 80%;
-
   resize: vertical;
   padding: 12px;
   border-radius: 5px;
@@ -733,6 +794,7 @@ const Td = styled.td`
   text-align: center;
   font-weight: 300;
 `;
+
 const DropDown = styled.div`
   background-color: ${themes.notification};
   border-radius: 8px;
@@ -743,4 +805,42 @@ const DropDown = styled.div`
   transform: translateX(-50%);
   padding: 10px 15px;
   z-index: 2;
+`;
+
+const DeleteModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+`;
+
+const ModalTitle = styled.h2`
+  margin-bottom: 10px;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+`;
+
+
+const DeleteButton = styled(Button)`
+  background-color: #ff4d4f;
+  color: white;
+`;
+
+const CancelButton = styled(Button)`
+  background-color: #f0f2f5;
 `;

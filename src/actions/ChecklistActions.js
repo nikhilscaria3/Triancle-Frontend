@@ -12,19 +12,19 @@ import {
 import { axiosInstance } from '../utils/baseurl';
 
 
-export const fetchChecklist = (searchTerm, sortBy, sortOrder) => {
+export const fetchChecklist = (page, limit, searchTerm, sortBy, sortOrder) => {
   return async (dispatch) => {
     dispatch({ type: FETCH_CHECKLIST_REQUEST });
     try {
-      const response = await axiosInstance.get('/checklist/getchecklist', {
+      const response = await axiosInstance.get(`/checklist/getchecklist?page=${page}&limit=${limit}`, {
         params: {
           searchTerm,
           sortBy,
           sortOrder
         }
       });
-      console.log(response.data.data.data);
-      dispatch({ type: FETCH_CHECKLIST_SUCCESS, payload: response.data.data.data });
+      console.log(response.data);
+      dispatch({ type: FETCH_CHECKLIST_SUCCESS, payload: response.data.data });
     } catch (error) {
       dispatch({ type: FETCH_CHECKLIST_FAILURE, payload: error.response.data });
     }

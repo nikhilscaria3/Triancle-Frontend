@@ -26,7 +26,7 @@ const CreateProjectForm = ({ users, count, createProjectData, updateProjectData,
     console.log("projectData", projectData);
     if (projectData) {
       setisedit(true);
-      const selectedProjectHead = users.find(project => project.id === projectData.UserId);
+      const selectedProjectHead = users.data.find(project => project.id === projectData.UserId);
       if (selectedProjectHead) { // Add null check
         setFormData({
           id: projectData.id,
@@ -144,7 +144,7 @@ const CreateProjectForm = ({ users, count, createProjectData, updateProjectData,
             )}
           </Select>
 
-          <p>{formData.halted}s</p>
+
           <Label htmlFor="halted">Halted:</Label>
           <Input
             type="checkbox"
@@ -222,8 +222,8 @@ const CreateProjectForm = ({ users, count, createProjectData, updateProjectData,
             required
           >
             <option >Select</option>
-            {users && users.length > 0 ? (
-              users
+            {users.data && users.data.length > 0 ? (
+              users.data
                 .filter(user => user.status)
                 .map((project) => (
                   <option key={project.id} value={project.id}>

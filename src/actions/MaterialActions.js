@@ -17,7 +17,10 @@ import {
     UPDATE_MATERIAL_FAILURE,
     UPDATE_MATERIALREQUEST_REQUEST,
     UPDATE_MATERIALREQUEST_SUCCESS,
-    UPDATE_MATERIALREQUEST_FAILURE
+    UPDATE_MATERIALREQUEST_FAILURE,
+    DELETE_MATERIAL_REQUEST,
+    DELETE_MATERIAL_SUCCESS,
+    DELETE_MATERIAL_FAILURE,
 
 } from '../actionTypes/MaterialTypes';
 import { axiosInstance } from '../utils/baseurl';
@@ -42,11 +45,11 @@ export const getmaterialtypes = (site) => {
 };
 
 
-export const getmaterial = (MaterialTypeFilter, siteFilter) => {
+export const getmaterial = (page, limit, MaterialTypeFilter, siteFilter) => {
     return async (dispatch) => {
         dispatch({ type: GET_MATERIAL_REQUEST });
         try {
-            const response = await axiosInstance.get('/material/getmaterial', {
+            const response = await axiosInstance.get(`/material/getmaterial?page=${page}&limit=${limit}`, {
                 params: {
                     MaterialTypeFilter,
                     siteFilter
@@ -61,11 +64,11 @@ export const getmaterial = (MaterialTypeFilter, siteFilter) => {
 };
 
 
-export const getmaterialrequest = (statusfilter, typefilter) => {
+export const getmaterialrequest = (page, limit, statusfilter, typefilter) => {
     return async (dispatch) => {
         dispatch({ type: GET_MATERIALREQUEST_REQUEST });
         try {
-            const response = await axiosInstance.get('/material/getmaterialrequest', {
+            const response = await axiosInstance.get(`/material/getmaterialrequest?page=${page}&limit=${limit}`, {
                 params: {
                     statusfilter, typefilter
                 }
@@ -97,7 +100,7 @@ export const creatematerial = (formData) => {
                 showNotification({ type: "ERROR", message: errorMessage });
             } else {
                 console.log(error);
-                dispatch({ type: CREATE_MATERIAL_FAILURE, payload: 'An error occurred while creating project' });
+                dispatch({ type: CREATE_MATERIAL_FAILURE, payload: 'An error occurred while creating material' });
             }
         }
     }
@@ -120,7 +123,7 @@ export const updatematerial = (formData) => {
                 showNotification({ type: "ERROR", message: errorMessage });
             } else {
                 console.log(error);
-                dispatch({ type: UPDATE_MATERIAL_FAILURE, payload: 'An error occurred while creating project' });
+                dispatch({ type: UPDATE_MATERIAL_FAILURE, payload: 'An error occurred while creating material' });
             }
         }
     }
@@ -143,7 +146,30 @@ export const updatematerialrequest = (formData) => {
                 showNotification({ type: "ERROR", message: errorMessage });
             } else {
                 console.log(error);
-                dispatch({ type: UPDATE_MATERIALREQUEST_FAILURE, payload: 'An error occurred while creating project' });
+                dispatch({ type: UPDATE_MATERIALREQUEST_FAILURE, payload: 'An error occurred while creating material' });
+            }
+        }
+    }
+};
+
+
+export const deletematerial = (id) => {
+    return async (dispatch) => {
+        dispatch({ type: DELETE_MATERIAL_REQUEST });
+        try {
+            const response = await axiosInstance.delete('/material/deletematerial', id);
+            console.log(response.data);
+            dispatch({ type: DELETE_MATERIAL_SUCCESS, payload: response.data });
+            showNotification({ type: "SUCCESS", message: response.data.message });
+        } catch (error) {
+            console.log(error.response);
+            if (error.response && error.response.data) {
+                const errorMessage = error.response.data.error;
+                dispatch({ type: DELETE_MATERIAL_FAILURE, payload: errorMessage });
+                showNotification({ type: "ERROR", message: errorMessage });
+            } else {
+                console.log(error);
+                dispatch({ type: DELETE_MATERIAL_FAILURE, payload: 'An error occurred while deleting material' });
             }
         }
     }

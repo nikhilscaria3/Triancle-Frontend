@@ -2,11 +2,11 @@
 import axios from "axios";
 import config from "./config";
 
-const BackendURL = config.BackendURL
+const BackendURL = config.NODE_ENV === "production" ? config.BackendURL : "http://localhost:5000/api/v1"
 
 const axiosInstance = axios.create({
   baseURL: BackendURL,
-});
+})
 
 
 axiosInstance.interceptors.request.use(

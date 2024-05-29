@@ -26,18 +26,20 @@ const Checklist = ({ checklists, bufferdata, message, loading, error, fetchCheck
   const [storedID, setStoredID] = useState(null)
   const [ExportData, setExportData] = useState(null)
   const [pdfBuffer, setPdfBuffer] = useState(null); // State to store PDF buffer
-
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [totalPages, setTotalPages] = useState(checklists.totalPages);
 
   useEffect(() => {
     // Fetch Checklists when component mounts
-    fetchChecklist();
+    fetchChecklist(page, limit);
   }, [fetchChecklist]);
 
   console.log(checklists);
 
 
   const handleSearch = (e) => {
-    fetchChecklist(e.target.value)
+    fetchChecklist("", "", e.target.value)
   };
 
   const handleFilter = (option) => {
@@ -193,8 +195,8 @@ const Checklist = ({ checklists, bufferdata, message, loading, error, fetchCheck
             </Tr>
           </Thead>
           <Tbody>
-            {checklists && checklists.length > 0 ? (
-              checklists.map((item, index) => (
+            {checklists.checklist && checklists.checklist.length > 0 ? (
+              checklists.checklist.map((item, index) => (
                 <Tr key={item.id}>
                   <Td>{(1 - 1) * 5 + index + 1}</Td>
                   <Td>{item.type}</Td>
@@ -218,7 +220,7 @@ const Checklist = ({ checklists, bufferdata, message, loading, error, fetchCheck
           </Tbody>
         </Table>
 
-        <Pagination />
+        <Pagination initialPage={page} totalPages={checklists.totalPages} getData={setPage} />
       </Container>
 
       {showDeleteModal && (

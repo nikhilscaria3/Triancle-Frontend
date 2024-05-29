@@ -36,7 +36,10 @@ const UserManage = ({
   deleteUser,
 }) => {
 
-  const [showMore, setShowMore] = useState(false); 
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [totalPages, setTotalPages] = useState(users.totalPages);
+  const [showMore, setShowMore] = useState(false);
   const [openCreateUser, setOpenCreateUser] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [editUserData, setEditUserData] = useState(null);
@@ -49,13 +52,13 @@ const UserManage = ({
 
   useEffect(() => {
     // Fetch users when component mounts
-    fetchUsers();
-  }, [fetchUsers]);
+    fetchUsers(page, limit);
+  }, [page, fetchUsers]);
 
   console.log(users);
 
   const handleSearch = (e) => {
-    fetchUsers(e.target.value)
+    fetchUsers("", "", e.target.value)
   };
 
 
@@ -216,8 +219,8 @@ const UserManage = ({
             </Tr>
           </Thead>
           <Tbody>
-            {users && users.length > 0 ? (
-              users.map((item, index) => (
+            {users.data && users.data.length > 0 ? (
+              users.data.map((item, index) => (
                 <Tr key={item.id} >
                   <Td onClick={() => handleProfileNavigate(item)} ><img className="" style={{ width: "50px", objectFit: "cover" }} src={item.image}></img></Td>
                   <Td>{item.idNumber}</Td>
@@ -267,7 +270,7 @@ const UserManage = ({
                       </DropDown>
                     )}
                   </Td>
-              
+
                 </Tr>
               ))
             ) : (
@@ -278,7 +281,7 @@ const UserManage = ({
           </Tbody>
         </Table>
 
-        <Pagination />
+        <Pagination initialPage={page} totalPages={users.totalPages} getData={setPage} />
       </Container>
 
       {showDeleteModal && (

@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import { TextField, Autocomplete } from '@mui/material';
 import {
   creatematerial,
+  deletematerial,
   getmaterial,
   getmaterialtypes,
   updatematerial,
@@ -27,10 +28,13 @@ const ItemMaster = ({
   getProject,
   getmaterial,
   updatematerial,
+  deletematerial,
   getmaterialtypes,
   creatematerial,
 }) => {
-
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalPages, setTotalPages] = useState(material.totalPages);
   const [showMore, setShowMore] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -40,25 +44,27 @@ const ItemMaster = ({
     category: "",
     materialname: "",
     unit: "",
-    currentStock: "",
+    currentStock: null,
     purchasedRate: "",
     projectId: null,
     hsnCode: "",
-    newStock: "",
+    newStock: null,
   });
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [materialID, setmaterialID] = useState(null);
   const [MaterialType, setMaterialType] = useState(null);
   const [MaterialTypeFilter, setMaterialTypeFilter] = useState("");
   const [siteFilter, setsiteFilter] = useState(null);
 
   useEffect(() => {
     getProject();
-    getmaterial();
     getmaterialtypes(); // Ensure consistent naming with the action creator
   }, [getProject, getmaterial, getmaterialtypes]); // Include all dependencies in the dependency array
 
   useEffect(() => {
-    getmaterial(MaterialTypeFilter, siteFilter);
-  }, [MaterialTypeFilter, siteFilter]); // Include all dependencies in the dependency array
+    getmaterial(page, limit, MaterialTypeFilter, siteFilter);
+  }, [page, MaterialTypeFilter, siteFilter]); // Include all dependencies in the dependency array
 
   const handleEditMaterial = (item) => {
     setIsEdit(true);
@@ -166,6 +172,24 @@ const ItemMaster = ({
     }
   };
 
+
+  const handleDeleteClick = (materialID) => {
+    setmaterialID(materialID);
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDeleteMaterial = async (materialID) => {
+    await deletematerial(materialID); // Pass the storedID directly to your action
+    setShowDeleteModal(false);
+    getmaterial(); // Refresh project data
+  };
+
+
+
   return (
     <>
       <ToastContainer />
@@ -244,7 +268,7 @@ const ItemMaster = ({
             {material.materialdata && material.materialdata.length > 0 ? (
               material.materialdata.map((data, index) => (
                 <Tr key={data.id}>
-                  <Td>{index + 1}</Td>
+                  <Td>{(page - 1) * 5 + index + 1}</Td>
                   <Td>{data.MaterialType.name}</Td>
                   <Td>{data.category}</Td>
                   <Td>{data.availableStock}</Td>
@@ -296,8 +320,22 @@ const ItemMaster = ({
             )}
           </Tbody>
         </Table>
-        <Pagination />
+        <Pagination initialPage={page} totalPages={material.totalPages} getData={setPage} />
       </Container>
+      {showDeleteModal && (
+        <DeleteModal>
+          <ModalContent>
+            <ModalTitle>Confirm Delete</ModalTitle>
+            <p>Are you sure you want to delete this project?</p>
+            <ButtonGroup>
+              <DeleteButton onClick={() => handleDeleteMaterial(materialID)}>
+                Delete
+              </DeleteButton>
+              <CancelButton onClick={handleCloseModal}>Cancel</CancelButton>
+            </ButtonGroup>
+          </ModalContent>
+        </DeleteModal>
+      )}
       {showModal && (
         <Overlay>
           <Modal>
@@ -381,6 +419,7 @@ const ItemMaster = ({
                     value={formData.currentStock}
                   />
                 </Items>
+
                 <Items>
                   <Label htmlFor="newStock">New Stock</Label>
                   <Input
@@ -478,6 +517,7 @@ export default connect(mapStateToProps, {
   getmaterial,
   getmaterialtypes,
   updatematerial,
+  deletematerial,
   creatematerial,
 })(ItemMaster);
 
@@ -659,4 +699,42 @@ const Input = styled.input`
 const FormButtons = styled.div`
   margin: 20px 0;
   justify-self: flex-end;
+`;
+
+const DeleteModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+`;
+
+const ModalTitle = styled.h2`
+  margin-bottom: 10px;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+`;
+
+
+const DeleteButton = styled(Button)`
+  background-color: #ff4d4f;
+  color: white;
+`;
+
+const CancelButton = styled(Button)`
+  background-color: #f0f2f5;
 `;

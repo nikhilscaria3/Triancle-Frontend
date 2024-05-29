@@ -1,6 +1,7 @@
 // config.js
 const config = {
-    BackendURL: "http://localhost:5000/api/v1",
+    NODE_ENV: "production",
+    BackendURL: "http://18.209.7.75:5000/api/v1",
     settings: {
         filestatus: ["Active", "Inactive", "Complete", "Hold"],
         projectstatus: ["Active", "Inactive", "Complete", "Hold"],

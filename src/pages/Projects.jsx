@@ -36,6 +36,9 @@ const Projects = ({
   updateProject,
   deleteProject,
 }) => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [totalPages, setTotalPages] = useState(projects.totalPages);
   const [showMore, setShowMore] = useState(false); // settings extra btn
   const [OpencreateProject, setOpenCreateProject] = useState(false);
   const [countofproject, setcountofproject] = useState([]);
@@ -48,11 +51,19 @@ const Projects = ({
   const [pdfBuffer, setPdfBuffer] = useState(null); // State to store PDF buffer
 
   useEffect(() => {
-    // Fetch projects when component mounts
-    getProject();
-
     fetchCount();
-  }, [getProject]);
+  }, []);
+
+
+  const fetchProjects = (page, limit) => {
+    getProject(page, limit);
+  };
+
+  useEffect(() => {
+    fetchProjects(page, limit);
+  }, [page, getProject]);
+
+
 
   const fetchCount = async () => {
     const response = await axiosInstance.get("/project/countofprojects");
@@ -61,11 +72,14 @@ const Projects = ({
     }
   };
 
-  console.log(projects);
+  console.log("projects.totalPages", projects.totalPages);
+
+
 
   const handleSearch = (e) => {
-    getProject(e.target.value);
+    getProject("", "", e.target.value);
   };
+
 
   const handleFilter = (option) => {
     // Call getInvoices with the selected sorting option
@@ -121,12 +135,12 @@ const Projects = ({
     setnewproject(false);
   };
 
-  
+
   const handleCreateProject = async (formData) => {
     try {
       await createProject(formData);
       getProject(); // Refresh project data
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleUpdateProject = async (formData) => {
@@ -154,7 +168,7 @@ const Projects = ({
       await deleteProject(storedID); // Pass the storedID directly to your action
       setShowDeleteModal(false);
       getProject(); // Refresh project data
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const toggleCreateProject = () => {
@@ -175,8 +189,6 @@ const Projects = ({
       [index]: !prevShowMore[index], // Toggle specific dropdown based on index
     }));
   };
-
-
 
   const optionValue = ["2020", "2021", "2022", "2023", "2024"];
 
@@ -299,13 +311,14 @@ const Projects = ({
           </Tbody>
         </Table>
 
-        <Pagination />
+        <Pagination initialPage={page} totalPages={projects.totalPages} getData={setPage} />
       </Container>
+
 
       {showDeleteModal && (
         <DeleteModal>
           <ModalContent>
-            <p>{storedID}</p>
+
             <ModalTitle>Confirm Delete</ModalTitle>
             <p>Are you sure you want to delete this project?</p>
             <ButtonGroup>

@@ -23,11 +23,11 @@ export const createInvoice = (invoiceData) => {
   }
 };
 
-export const getInvoices = (searchTerm,sortBy,sortOrder) => {
+export const getInvoices = (page, limit, searchTerm, sortBy, sortOrder) => {
   return async (dispatch) => {
     dispatch({ type: GET_INVOICES_REQUEST });
     try {
-      const response = await axiosInstance.get('/invoices/getinvoices', {
+      const response = await axiosInstance.get(`/invoices/getinvoices?page=${page}&limit=${limit}`, {
         params: {
           searchTerm,
           sortBy,

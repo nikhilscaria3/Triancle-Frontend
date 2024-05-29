@@ -19,6 +19,10 @@ import {
     UPDATE_MATERIALREQUEST_REQUEST,
     UPDATE_MATERIALREQUEST_SUCCESS,
     UPDATE_MATERIALREQUEST_FAILURE,
+    DELETE_MATERIAL_REQUEST,
+    DELETE_MATERIAL_SUCCESS,
+    DELETE_MATERIAL_FAILURE,
+
 } from '../actionTypes/MaterialTypes';
 
 
@@ -39,12 +43,14 @@ const materialReducer = (state = initialState, action) => {
         case GET_MATERIALREQUEST_REQUEST:
         case UPDATE_MATERIAL_REQUEST:
         case UPDATE_MATERIALREQUEST_REQUEST:
+        case DELETE_MATERIAL_REQUEST:
             return { ...state, loading: true, error: null };
 
         case CREATE_MATERIAL_SUCCESS:
         case GET_MATERIALTYPE_SUCCESS:
         case UPDATE_MATERIAL_SUCCESS:
         case UPDATE_MATERIALREQUEST_SUCCESS:
+        case DELETE_MATERIAL_SUCCESS:
             return { ...state, loading: false, materialtype: action.payload, error: null };
         case GET_MATERIAL_SUCCESS:
             console.log(action.payload);
@@ -59,6 +65,7 @@ const materialReducer = (state = initialState, action) => {
         case UPDATE_MATERIAL_FAILURE:
         case GET_MATERIALREQUEST_FAILURE:
         case UPDATE_MATERIALREQUEST_FAILURE:
+        case DELETE_MATERIAL_FAILURE:
             return { ...state, loading: false, error: action.payload };
         default:
             return state;

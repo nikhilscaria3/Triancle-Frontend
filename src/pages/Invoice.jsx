@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { THEME_COLORS as themes } from "../ThemeConfig";
@@ -10,17 +10,21 @@ import { getInvoices } from "../actions/InvoiceActions";
 import SearchBar from "../components/includes/SearchBar";
 import InvoiceSortBtn from "../components/includes/InvoiceSortBtn";
 import { axiosInstance } from "../utils/baseurl";
+import Pagination from "../components/includes/Pagination";
 
 const Invoice = ({ invoices, getInvoices }) => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalPages, setTotalPages] = useState(invoices.totalPages);
 
   useEffect(() => {
     // Fetch projects when component mounts
-    getInvoices();
+    getInvoices(page, limit);
 
-  }, [getInvoices]);
+  }, [page, getInvoices]);
 
   const handleSearch = (e) => {
-    getInvoices(e.target.value, '', ''); // Pass empty strings for sortBy and sortOrder
+    getInvoices(page, limit, e.target.value, '', ''); // Pass empty strings for sortBy and sortOrder
   };
 
   const handleFilter = (option) => {
@@ -85,7 +89,7 @@ const Invoice = ({ invoices, getInvoices }) => {
     }
   }
 
-  console.log(invoices.data);
+  console.log(invoices.invoices);
 
   return (
     <div>
@@ -114,8 +118,8 @@ const Invoice = ({ invoices, getInvoices }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {invoices.data && invoices.data.length > 0 ? (
-              invoices.data.map((item) => (
+            {invoices.invoices && invoices.invoices.length > 0 ? (
+              invoices.invoices.map((item) => (
                 <Tr key={item.id}>
                   <Td>{item.invoiceNumber}</Td>
                   <Td>{item.date}</Td>
@@ -133,6 +137,7 @@ const Invoice = ({ invoices, getInvoices }) => {
             )}
           </Tbody>
         </Table>
+        <Pagination initialPage={page} totalPages={invoices.totalPages} getData={setPage} />
       </MainContainer>
     </div>
   );

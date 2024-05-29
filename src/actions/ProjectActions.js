@@ -2,11 +2,11 @@ import * as actionTypes from '../actionTypes/ProjectActionTypes';
 import { axiosInstance } from '../utils/baseurl';
 import { showNotification } from '../utils/toastmessage';
 
-export const getProject = (searchTerm, sortBy, sortOrder) => {
+export const getProject = (page, limit, searchTerm, sortBy, sortOrder) => {
     return async (dispatch) => {
         dispatch({ type: actionTypes.GET_PROJECT_REQUEST });
         try {
-            const response = await axiosInstance.get('/project/getproject', {
+            const response = await axiosInstance.get(`/project/getproject?page=${page}&limit=${limit}`, {
                 params: {
                     searchTerm,
                     sortBy,

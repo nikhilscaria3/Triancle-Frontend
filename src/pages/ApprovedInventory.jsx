@@ -20,6 +20,9 @@ const ApprovedInventory = ({
   getmaterial,
   getmaterialtypes,
 }) => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalPages, setTotalPages] = useState(materialrequest.totalPages);
   const [showMore, setShowMore] = useState(false);
   const [MaterialTypeFilter, setMaterialTypeFilter] = useState(null);
 
@@ -33,7 +36,7 @@ const ApprovedInventory = ({
 
   useEffect(() => {
     getProject();
-    getmaterialrequest("", MaterialTypeFilter);
+    getmaterialrequest(page, limit, MaterialTypeFilter);
     getmaterial();
     getmaterialtypes(); // Ensure consistent naming with the action creator
   }, [getProject, getmaterialrequest, MaterialTypeFilter, getmaterial, getmaterialtypes]); // Include all dependencies in the dependency array
@@ -49,16 +52,22 @@ const ApprovedInventory = ({
     }));
   };
 
+
   const handleSubmit = async (status, id) => {
-    console.log(id);
-    console.log(status);
-    setFormData((prev) => ({
-      ...prev,
+    // Update formData with new status and id
+    const updatedFormData = {
+      ...formData,
       status: status,
       id: id
-    }));
+    };
 
-    await updatematerialrequest(formData);
+    // Update the local state with new formData
+    setFormData(updatedFormData);
+
+    // Call updatematerialrequest with updatedFormData
+    await updatematerialrequest(updatedFormData);
+
+    // After updating material request, fetch the updated data
     await getmaterialrequest();
   };
 
@@ -107,8 +116,7 @@ const ApprovedInventory = ({
             )}
           </Select>
         </Top>
-        <p>{formData.fromSite}</p>
-        <p>{formData.comment}</p>
+
         <Table>
           <Thead>
             <Tr>
@@ -189,7 +197,7 @@ const ApprovedInventory = ({
             )}
           </Tbody>
         </Table>
-        <Pagination />
+        <Pagination initialPage={page} totalPages={materialrequest.totalPages} getData={setPage} />
       </Container>
     </div >
   );
@@ -204,6 +212,8 @@ const mapStateToProps = (state) => ({
   loading: state.project.loading,
   error: state.project.error,
 });
+
+
 
 export default connect(mapStateToProps, {
   getProject,

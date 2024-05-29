@@ -7,30 +7,35 @@ import { axiosInstance } from "../../utils/baseurl";
 import socket from "../../utils/socket";
 const NotificationCenter = () => {
   const [activeButton, setActiveButton] = useState(null);
+  const [filterButton, setfilterButton] = useState(null);
   const [showNotification, setShowNotification] = useState(true);
   const notificationRef = useRef(null);
   const [newUserNotification, setNewUserNotification] = useState([]);
   const [unreadNotifications, setUnreadNotificationsCount] = useState(0);
   const notificationCenterRef = useRef(null);
-  
+
   const formatDateTime = (isoDate) => {
     const date = new Date(isoDate);
-    const options = { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit', 
-        hour12: true 
+    const options = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
     };
     return date.toLocaleString('en-US', options);
-};
+  };
 
 
   const fetchNotifications = async () => {
     try {
-      const response = await axiosInstance.get('/notification/notificationmessage');
+      const response = await axiosInstance.get('/notification/notificationmessage', {
+        params: {
+          filterButton
+        }
+      });
       setNewUserNotification(response.data);
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -40,7 +45,7 @@ const NotificationCenter = () => {
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [activeButton]);
 
 
   useEffect(() => {
@@ -72,38 +77,21 @@ const NotificationCenter = () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [notificationRef]);
-  const handleButtonClick = (index) => {
+
+  const handleButtonClick = (btn, index) => {
+    if (btn === "All") {
+      setfilterButton("")
+    } else {
+      setfilterButton(btn)
+    }
     setActiveButton(index);
   };
 
   const notifications = [
-    {
-      profile: profile1,
-      content: "X wants to order cement",
-      messages: [
-        {
-          message: "10 packs of cement required at Y site.",
-          time: "12:00",
-        },
-      ],
-    },
-    {
-      profile: profile2,
-      content: "leave request",
-      messages: [
-        {
-          message:
-            "16 march 2024 — Yes it is legal and he has the right to reject your Leave. ........",
-          time: "12:00",
-        },
-        {
-          message: "sooraj requested 3 days leave",
-          time: "10:30",
-        },
-      ],
-    },
+
   ];
   const buttons = ["All", "Issues", "Activities", "Requests", "Updates"];
+
   return (
     <>
       {showNotification && (
@@ -114,7 +102,7 @@ const NotificationCenter = () => {
                 return (
                   <Btn
                     key={index}
-                    onClick={() => handleButtonClick(index)}
+                    onClick={() => handleButtonClick(btn, index)}
                     className={activeButton === index ? "active" : ""}
                   >
                     {btn}
@@ -123,7 +111,7 @@ const NotificationCenter = () => {
               })}
           </TopBtns>
           <Head>Today</Head>
-          {newUserNotification ?
+          {newUserNotification && newUserNotification.length > 0 ? (
             <ContentBox>
               {newUserNotification.map((notification, index) => {
                 return (
@@ -133,22 +121,18 @@ const NotificationCenter = () => {
                     </Profile>
                     <ContentBody>
                       <Content>{notification.notifieduser}</Content>
-
                       <Message>
                         {notification.notificationmessage}
                         <Time>{formatDateTime(notification.createdAt)}</Time>
                       </Message>
-
                     </ContentBody>
                   </SingleNotification>
                 );
               })}
             </ContentBox>
-
-            :
-
+          ) : notifications && notifications.length > 0 ? (
             <ContentBox>
-              {notifications.map((notification, index) => {
+              {notifications && notifications.map((notification, index) => {
                 return (
                   <SingleNotification key={index}>
                     <Profile>
@@ -157,9 +141,9 @@ const NotificationCenter = () => {
                     <ContentBody>
                       <Content>{notification.content}</Content>
                       {notification.messages &&
-                        notification.messages.map((message) => {
+                        notification.messages.map((message, msgIndex) => {
                           return (
-                            <Message>
+                            <Message key={msgIndex}>
                               {message.message}
                               <Time>{message.time}Am</Time>
                             </Message>
@@ -170,10 +154,15 @@ const NotificationCenter = () => {
                 );
               })}
             </ContentBox>
-          }
+          ) : (
+            <ContentBox>
+              <p>No Notifications Available</p>
+            </ContentBox>
+          )}
         </MainContainer>
       )}
     </>
+
   );
 };
 

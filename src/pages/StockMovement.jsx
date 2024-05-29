@@ -18,17 +18,19 @@ const StockMovement = ({
   getmaterial,
   getmaterialtypes,
 }) => {
-
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalPages, setTotalPages] = useState(materialrequest.totalPages);
   const [showMore, setShowMore] = useState(false);
   const [MaterialTypeFilter, setMaterialTypeFilter] = useState(null);
   const [MaterialStatusFilter, setMaterialStatusFilter] = useState(null);
 
   useEffect(() => {
     getProject();
-    getmaterialrequest(MaterialStatusFilter, MaterialTypeFilter);
+    getmaterialrequest(page, limit, MaterialStatusFilter, MaterialTypeFilter);
     getmaterial();
     getmaterialtypes(); // Ensure consistent naming with the action creator
-  }, [getProject, MaterialStatusFilter, MaterialTypeFilter, getmaterialrequest, getmaterial, getmaterialtypes]); // Include all dependencies in the dependency array
+  }, [page, getProject, MaterialStatusFilter, MaterialTypeFilter, getmaterialrequest, getmaterial, getmaterialtypes]); // Include all dependencies in the dependency array
 
 
   const toggleMoreSettings = (index) => {
@@ -165,7 +167,7 @@ const StockMovement = ({
             )}
           </Tbody>
         </Table>
-        <Pagination />
+        <Pagination initialPage={page} totalPages={materialrequest.totalPages} getData={setPage} />
       </Container>
       {/* {openModal && (
         <Overlay>

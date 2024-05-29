@@ -257,7 +257,7 @@ const InventoryNew = ({ projects, getProject, inventorydata, getinventory, creat
 
           </Table>
         </MaterialList>
-        <Pagination />
+        
       </Container>
     </div>
   );

@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import styled from "styled-components";
 const BackendURL = config.BackendURL
 
 const getFileType = (file) => {
@@ -40,7 +41,7 @@ const renderFile = (fileType, fileUrl) => {
         case 'pdf':
             return <embed src={fileUrl} type='application/pdf' width='100%' height='600px' />;
         default:
-            return <p>File type not supported</p>;
+            return <p>File type not recognized or file unavailable</p>;
     }
 };
 
@@ -123,17 +124,13 @@ const DocumentView = () => {
     };
 
 
-    const handleShareLinkedIn = () => {
-        window.open(`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(link)}`);
-    };
-
 
     return (
         <div>
 
             <Paper elevation={3} style={{ marginBottom: '20px', padding: '20px' }}>
                 <Typography variant="h5" style={{ fontWeight: 700 }} gutterBottom>
-                    File Details
+                    Document Details
                 </Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -146,12 +143,12 @@ const DocumentView = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Typography variant="subtitle1" style={{ fontWeight: 700 }}>File:</Typography>
-                        <div className='d-flex'>
+                        <div style={{ display: "flex" }}>
                             <div style={{ width: '300px', height: "300px", display: 'flex', alignItems: 'center', justifyContent: 'center', border: "solid" }}>
                                 {renderFile(fileType, `${BackendURL}${data.file}`)}
                             </div>
                             <Button onClick={() => handleShareButtonOpen()}>
-                                <i class="fa fa-share fa-2x"></i>
+                                <i class='bx bxs-share bx-flip-horizontal' ></i>
                             </Button>
                         </div>
 
@@ -159,6 +156,7 @@ const DocumentView = () => {
 
                 </Grid>
             </Paper>
+
             <Modal
                 open={deleteOpen}
                 onClose={handleShareButtonClose}
@@ -166,7 +164,7 @@ const DocumentView = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <div className='d-flex gap-4 flex-wrap'>
+                    <Share className='d-flex gap-4 flex-wrap'>
                         <Button onClick={handleShareWhatsApp} variant="contained" startIcon={<i class='bx bxl-whatsapp' />}>
                             WhatsApp
                         </Button>
@@ -179,13 +177,13 @@ const DocumentView = () => {
                         <Button onClick={handleDownload} variant="contained" startIcon={<i class="fa fa-download"></i>}>
                             Download
                         </Button>
-                    </div>
+                    </Share>
                 </Box>
             </Modal>
 
             <Paper elevation={3} style={{ marginBottom: '20px', padding: '20px' }}>
                 <Typography variant="h5" style={{ fontWeight: 700 }} gutterBottom>
-                    Account Details
+                    Project Details
                 </Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -233,3 +231,12 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { getDocument })(DocumentView);
+
+
+
+const Share = styled.div`
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+
+`;

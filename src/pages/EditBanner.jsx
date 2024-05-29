@@ -5,6 +5,7 @@ import { axiosInstance } from "../utils/baseurl";
 import { showNotification } from "../utils/toastmessage";
 import { ToastContainer } from "react-toastify";
 import config from "../utils/config";
+import ImageCarousel from "../components/includes/caroUsel";
 
 const Editbanner = () => {
   const [Edits, setEdits] = useState([]);
@@ -65,6 +66,7 @@ const Editbanner = () => {
     <div>
       <ToastContainer />
       <AddEditContainer>
+
         <AddEditButton>
           <Input
             type="text"
@@ -95,6 +97,7 @@ const Editbanner = () => {
           <Button type="submit">Save</Button>
         </AddEditButton>
       </AddEditContainer>
+      <ImageCarousel images={Edits.map((edit) => edit.imageUrl)} />
       <Container>
         <h1>Edit Banner</h1>
         <Table>

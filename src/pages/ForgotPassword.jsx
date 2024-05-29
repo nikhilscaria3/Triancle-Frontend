@@ -102,6 +102,7 @@ const mapStateToProps = (state) => ({
   error: state.auth.error
 });
 
+
 export default connect(mapStateToProps, { resetPasswordRequest })(ForgotPassword);
 
 const FormContainer = styled.div`
