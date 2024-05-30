@@ -11,7 +11,7 @@ const HR = () => {
         <Left>
           <HrBoxes />
           <Hrtable />
-          <Pagination />
+          <Pagination initialPage={0} totalPages={1} getData={null} />
         </Left>
         <Right>
           <Box>

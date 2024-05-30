@@ -37,7 +37,7 @@ const UserManage = ({
 }) => {
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [totalPages, setTotalPages] = useState(users.totalPages);
   const [showMore, setShowMore] = useState(false);
   const [openCreateUser, setOpenCreateUser] = useState(false);
@@ -213,7 +213,7 @@ const UserManage = ({
               <Th>Access Level</Th>
               <Th>Phone Number</Th>
               <Th>Status</Th>
-              <Th>Join Date</Th>
+              {/* <Th>Join Date</Th> */}
               <Th>Blood Group</Th>
               <Th>Settings</Th>
             </Tr>
@@ -234,7 +234,7 @@ const UserManage = ({
                   </Td>
                   <Td>{item.phoneNo}</Td>
                   <Td>{item.status ? <GreenDot /> : <RedDot />}</Td>
-                  <Td>{item.joinDate}</Td>
+                  {/* <Td>{item.joinDate}</Td> */}
                   <Td>{item.bloodGroup}</Td>
                   <Td
                     onClick={() => toggleMoreSettings(index)}

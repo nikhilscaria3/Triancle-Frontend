@@ -5,6 +5,7 @@ import profile1 from "../../assets/icons/profile1.svg";
 import profile2 from "../../assets/icons/profile2.svg";
 import { axiosInstance } from "../../utils/baseurl";
 import socket from "../../utils/socket";
+
 const NotificationCenter = () => {
   const [activeButton, setActiveButton] = useState(null);
   const [filterButton, setfilterButton] = useState(null);
@@ -36,7 +37,7 @@ const NotificationCenter = () => {
           filterButton
         }
       });
-      setNewUserNotification(response.data);
+      setNewUserNotification(response.data.notificationMessages);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
@@ -156,7 +157,7 @@ const NotificationCenter = () => {
             </ContentBox>
           ) : (
             <ContentBox>
-              <p>No Notifications Available</p>
+              <p style={{ color: "white" }}>No Notifications Available</p>
             </ContentBox>
           )}
         </MainContainer>
@@ -165,6 +166,7 @@ const NotificationCenter = () => {
 
   );
 };
+
 
 export default NotificationCenter;
 

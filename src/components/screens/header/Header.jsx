@@ -12,12 +12,69 @@ import NotificationCenter from "../../includes/NotificationCenter";
 import { useNavigate } from "react-router";
 import { axiosInstance } from "../../../utils/baseurl";
 import { Link } from "react-router-dom";
+import socket from "../../../utils/socket";
 
 export default function Header({ toggleIconsOnly }) {
   const [showNotificationCenter, setShowNotificationCenter] = useState(false);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0)
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null); // default user email for testing
   const [avatarOpen, setAvatarOpen] = useState(null);
+
+  useEffect(() => {
+    fetchNotifications();
+    fetchUserData()
+  }, [showNotificationCenter, unreadNotificationsCount]);
+
+
+  useEffect(() => {
+    fetchUserData();
+  }, []); // Empty dependency array to execute only once on component mount
+
+  useEffect(() => {
+    // Listen for new user notifications
+    socket.on('documentassignnotification', (message) => {
+      setUnreadNotificationsCount(prevCount => prevCount + 1);
+    });
+
+    return () => {
+      // Clean up event listener
+      socket.off('documentassignnotification');
+    };
+  }, []);
+
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await axiosInstance.get('/notification/notificationmessage', {
+
+      });
+      console.log(response.data.unreadcount);
+      setUnreadNotificationsCount(response.data.unreadcount);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+
+
+
+  const updateReadNotifications = async () => {
+    try {
+      const response = await axiosInstance.put('/notification/updatenotificationread', {
+        status: true
+      });
+
+      if (response.data.status === 'success') {
+        console.log('Notifications marked as read');
+      } else {
+        console.error('Failed to update notifications');
+      }
+    } catch (error) {
+      console.error('Error updating notifications:', error);
+    }
+  };
+
 
   const fetchUserData = async () => {
     try {
@@ -31,9 +88,6 @@ export default function Header({ toggleIconsOnly }) {
     }
   };
 
-  useEffect(() => {
-    fetchUserData();
-  }, []); // Empty dependency array to execute only once on component mount
 
   const handleLogout = () => {
     // Perform logout actions (clear authentication tokens, reset state, etc.)
@@ -53,6 +107,8 @@ export default function Header({ toggleIconsOnly }) {
   };
 
   const toggleNotificationCenter = () => {
+    fetchUserData()
+    updateReadNotifications()
     setShowNotificationCenter(!showNotificationCenter);
   };
 
@@ -83,7 +139,11 @@ export default function Header({ toggleIconsOnly }) {
                       alt="Notification"
                     />
                   </NotificationIconContainer>
-                  <NotificationCount>92</NotificationCount>
+                  {unreadNotificationsCount ?
+                    <NotificationCount>
+                      {unreadNotificationsCount}
+                    </NotificationCount>
+                    : null}
                 </NotificationContainer>
               </Right>
 
@@ -319,9 +379,10 @@ export default function Header({ toggleIconsOnly }) {
             </RightContainer>
           </ItemContainer>
         </MainContainer>
-      </Body>
+      </Body >
 
-      {showNotificationCenter && <NotificationCenter />}
+      {showNotificationCenter && <NotificationCenter />
+      }
     </>
   );
 }

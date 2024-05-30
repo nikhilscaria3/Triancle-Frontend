@@ -35,7 +35,7 @@ const navItems = [
   // { icon: schedule, label: "Add Schedule", route: "/addSchedule" },
   { icon: invoice, label: "Invoice", route: "/invoice" },
   { icon: banner, label: "Banner", route: "/editBanner" },
-  // { icon: hr, label: "HR", route: "/hr" },
+  { icon: hr, label: "Ḷabour", route: "/hr" },
   { icon: documents, label: "Documents", route: "/documents" },
   // { icon: upload, label: "File Upload", route: "/fileUpload" },
   // { icon: reports, label: "Reports", route: "/reports" },

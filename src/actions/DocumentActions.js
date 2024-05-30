@@ -33,7 +33,8 @@ export const createDocument = (documentData) => {
             if (documentData.sendNotification) {
                 const token = localStorage.getItem('accesstoken');
                 const userId = Number(documentData.selectedUsers);
-                socket.emit('documentassignnotification', userId, token);
+                const type = documentData.notificationtype
+                socket.emit('documentassignnotification', userId, type, token);
             }
             dispatch({ type: CREATE_DOCUMENT_SUCCESS, payload: response.data.message });
             showNotification({ type: "SUCCESS", message: response.data.message });

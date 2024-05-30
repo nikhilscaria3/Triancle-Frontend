@@ -37,7 +37,7 @@ const Projects = ({
   deleteProject,
 }) => {
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [totalPages, setTotalPages] = useState(projects.totalPages);
   const [showMore, setShowMore] = useState(false); // settings extra btn
   const [OpencreateProject, setOpenCreateProject] = useState(false);
@@ -226,8 +226,8 @@ const Projects = ({
           <Thead>
             <Tr>
               <Th>Type</Th>
-              <Th>Name</Th>
               <Th>Project ID</Th>
+              <Th>Name</Th>
               <Th>Location</Th>
               <Th>Start Date</Th>
               <Th>End Date</Th>
@@ -242,11 +242,11 @@ const Projects = ({
               projects.projects.map((item, index) => (
                 <Tr key={item.id}>
                   <Td>{item.type}</Td>
-                  <Td>{item.name}</Td>
                   <Td>
                     {config.settings.projectprefix}
                     {item.projectId}
                   </Td>
+                  <Td>{item.name}</Td>
                   <Td>{item.location}</Td>
                   <Td>{item.startDate}</Td>
                   <Td

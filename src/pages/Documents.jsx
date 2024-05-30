@@ -41,6 +41,7 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
     DocumentTypeId: "",
     description: "",
     selectedUsers: null,
+    notificationtype: "Activities",
     sendNotification: false,
     file: "",
   });
@@ -100,7 +101,7 @@ const Documents = ({ projects, document, users, fetchUsers, getDocument, createD
   const [documentdata, setDocumentData] = useState([]);
   const [selectedDocumentType, setSelectedDocumentType] = useState(null);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [totalPages, setTotalPages] = useState(document.totalPages);
 
 

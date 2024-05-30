@@ -8,7 +8,9 @@ const Pagination = ({ initialPage, totalPages, getData }) => {
   const [page, setPage] = useState(initialPage);
 
   useEffect(() => {
-    getData(page);
+    if (typeof getData === 'function') {
+      getData(page);
+    }
   }, [page, getData]);
 
   const handlePrevClick = () => {
@@ -22,7 +24,6 @@ const Pagination = ({ initialPage, totalPages, getData }) => {
       setPage((prevPage) => prevPage + 1);
     }
   };
-
 
   return (
     <div>
